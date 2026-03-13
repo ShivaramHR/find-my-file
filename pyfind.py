@@ -20,6 +20,9 @@ def searchFilePattern(dir, pattern):
                 sameFileTypes.append(os.path.join(root, file))
     return sameFileTypes
 
+def searchFileExtension(dir, extension):
+    return searchFilePattern(dir, f"*.{extension}")
+
 
 def execute():
     if len(sys.argv) == 1:
@@ -32,9 +35,15 @@ def execute():
         getFilePath(newDir)
     if "--name" in sys.argv:
         pattern = sys.argv[sys.argv.index("--name") + 1]
-        sameFileTypes = searchFileExtension(currDir, pattern)
+        sameFileTypes = searchFilePattern(currDir, pattern)
         for ele in sameFileTypes:
             print(ele)
-        
+    if "--ext" in sys.argv:
+        extension = sys.argv[sys.argv.index('--ext') +1]
+        sameFileExt = searchFileExtension(currDir, extension)
+        for ele in sameFileExt:
+            print(ele)
+
+
 if __name__ == "__main__": 
     execute()
