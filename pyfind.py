@@ -6,18 +6,20 @@ import fnmatch
 def getFilePath(dir):
     for root, _, files in os.walk(dir):
         for file in files:
+            path = os.path.join(root, file)
             if file.startswith("._"):
                 continue
-            print(os.path.join(root, file))
+            print(path)
 
 def searchFilePattern(dir, pattern):
     sameFileTypes = []
     for root, _, files in os.walk(dir):
         for file in files:
+            path = os.path.join(root, file)
             if file.startswith("._"):
                 continue
             if fnmatch.fnmatch(file, pattern):
-                sameFileTypes.append(os.path.join(root, file))
+                sameFileTypes.append(path)
     return sameFileTypes
 
 def searchFileExtension(dir, extension):
@@ -27,24 +29,47 @@ def searchFileContents(dir, content):
     sameFileContent = []
     for root, _, files in os.walk(dir):
         for file in files:
+            path = os.path.join(root, file)
             if file.startswith("._"):
                 continue
             try:
-                with open(os.path.join(root, file), 'r', errors='ignore') as f:
+                with open(path, 'r', errors='ignore') as f:
                     if content in f.read():
-                        sameFileContent.append(os.path.join(root, file))
+                        sameFileContent.append(path)
             except:
                 continue
     return sameFileContent
+
+def searchBySize(dir, size):
+    try:
+        sizeInBytes = int(size)
+        sameFileSize = []
+        for root, _, files in os.walk(dir):
+            for file in files:
+                path = os.path.join(root, file)
+                if file.startswith("._"):
+                    continue
+                try:
+                    if os.path.getsize(path) >= sizeInBytes:
+                        sameFileSize.append(path)
+                except:
+                    continue
+        return sameFileSize
+    except Exception as e:
+        print(f"Error: {e}")
+        return []
 
 
 def execute():
     if len(sys.argv) == 1:
         print("No arguments provided")
         sys.exit(1)
-    currDir = os.getcwd()
     fileName = sys.argv[1]
-    newDir = os.path.join(currDir, fileName)
+    newDir = os.path.abspath(fileName)
+    if not os.path.isdir(newDir):
+        print(f"Error: {newDir} is not a directory")
+        sys.exit(1) 
+
     if len(sys.argv) == 2:
         getFilePath(newDir)
         return
@@ -63,6 +88,11 @@ def execute():
         content = sys.argv[sys.argv.index("--contains") + 1]
         sameFileContents = searchFileContents(newDir, content)
         for path in sameFileContents:
+            print(path)
+    if "--size" in sys.argv:
+        size = sys.argv[sys.argv.index("--size") + 1]
+        sameFileSize = searchBySize(newDir, size)
+        for path in sameFileSize:
             print(path)
 
 if __name__ == "__main__": 
