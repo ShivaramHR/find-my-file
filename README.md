@@ -1,9 +1,9 @@
 # PyFind
 
-PyFind is a simple command-line file search tool written in Python.  
-It recursively searches through directories and prints the full path of all files inside a given folder.
+PyFind is a command-line file search tool written in Python.  
+It recursively searches through directories and allows filtering files based on name patterns, extensions, file contents, and file size.
 
-This project demonstrates directory traversal using Python's `os` module and basic command-line argument handling with `sys`.
+This project demonstrates directory traversal, file inspection, and command-line argument handling using Python's standard library.
 
 ---
 
@@ -11,7 +11,10 @@ This project demonstrates directory traversal using Python's `os` module and bas
 
 - Recursively traverses directories
 - Lists all files inside a given folder
-- Prints full file paths
+- Search files by filename pattern
+- Search files by extension
+- Search files containing specific text
+- Search files by minimum file size
 - Simple command-line interface
 - No external dependencies
 
@@ -50,6 +53,72 @@ Example output:
 /Users/username/find-my-file/projects/findSum/sum.py
 ```
 
+---
+
+## Search by Filename Pattern
+
+Search files using wildcard patterns.
+
+```
+python3 pyfind.py projects --name "*.py"
+```
+
+Example output:
+
+```
+/Users/username/find-my-file/projects/hello.py
+/Users/username/find-my-file/projects/findSum/sum.py
+```
+
+---
+
+## Search by File Extension
+
+```
+python3 pyfind.py projects --ext py
+```
+
+Example output:
+
+```
+/Users/username/find-my-file/projects/hello.py
+/Users/username/find-my-file/projects/findSum/sum.py
+```
+
+---
+
+## Search by File Contents
+
+Find files that contain specific text.
+
+```
+python3 pyfind.py projects --content "import"
+```
+
+Example output:
+
+```
+/Users/username/find-my-file/projects/hello.py
+/Users/username/find-my-file/projects/findSum/sum.py
+```
+
+---
+
+## Search by File Size
+
+Find files larger than a given size (in bytes).
+
+```
+python3 pyfind.py projects --size 1000
+```
+
+Example output:
+
+```
+/Users/username/find-my-file/projects/largefile.txt
+```
+
+---
 
 ## Requirements
 
@@ -58,26 +127,28 @@ Example output:
 
 ---
 
-## Future Improvements
-
-Possible enhancements:
-
-- Search files by extension
-- Search files by filename pattern
-- Search file contents
-- Add command-line flags (e.g. `--ext`, `--name`)
-- Ignore hidden files and system files
-
----
-
 ## Learning Goals
 
 This project was built to practice:
 
-- File system traversal
-- Command-line arguments (`sys.argv`)
-- Using Python's `os` module
-- Building simple CLI tools
+- File system traversal with `os.walk`
+- Command-line argument parsing using `sys.argv`
+- Pattern matching with `fnmatch`
+- File content scanning
+- File size inspection
+- Designing modular CLI tools
+
+---
+
+## Future Improvements
+
+Possible enhancements:
+
+- Combine multiple filters (e.g. extension + content)
+- Add `--ignore` to skip directories
+- Add file modification date filtering
+- Support human-readable size formats (`10KB`, `5MB`)
+- Add CLI help output (`--help`)
 
 ---
 
