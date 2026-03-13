@@ -36,7 +36,7 @@ def searchFileContents(dir, content):
                 with open(path, 'r', errors='ignore') as f:
                     if content in f.read():
                         sameFileContent.append(path)
-            except:
+            except Exception:
                 continue
     return sameFileContent
 
@@ -52,13 +52,19 @@ def searchBySize(dir, size):
                 try:
                     if os.path.getsize(path) >= sizeInBytes:
                         sameFileSize.append(path)
-                except:
+                except Exception:
                     continue
         return sameFileSize
     except Exception as e:
         print(f"Error: {e}")
         return []
 
+commands = {
+    "--name": searchFilePattern,
+    "--ext": searchFileExtension,
+    "--contains": searchFileContents,
+    "--size": searchBySize
+}
 
 def execute():
     if len(sys.argv) == 1:
@@ -74,26 +80,38 @@ def execute():
         getFilePath(newDir)
         return
 
-    if "--name" in sys.argv:
-        pattern = sys.argv[sys.argv.index("--name") + 1]
-        sameFileTypes = searchFilePattern(newDir, pattern)
-        for ele in sameFileTypes:
-            print(ele)
-    if "--ext" in sys.argv:
-        extension = sys.argv[sys.argv.index('--ext') +1]
-        sameFileExt = searchFileExtension(newDir, extension)
-        for ele in sameFileExt:
-            print(ele)
-    if "--contains" in sys.argv:
-        content = sys.argv[sys.argv.index("--contains") + 1]
-        sameFileContents = searchFileContents(newDir, content)
-        for path in sameFileContents:
-            print(path)
-    if "--size" in sys.argv:
-        size = sys.argv[sys.argv.index("--size") + 1]
-        sameFileSize = searchBySize(newDir, size)
-        for path in sameFileSize:
-            print(path)
+    # if "--name" in sys.argv:
+    #     pattern = sys.argv[sys.argv.index("--name") + 1]
+    #     sameFileTypes = searchFilePattern(newDir, pattern)
+    #     for ele in sameFileTypes:
+    #         print(ele)
+    # if "--ext" in sys.argv:
+    #     extension = sys.argv[sys.argv.index('--ext') +1]
+    #     sameFileExt = searchFileExtension(newDir, extension)
+    #     for ele in sameFileExt:
+    #         print(ele)
+    # if "--contains" in sys.argv:
+    #     content = sys.argv[sys.argv.index("--contains") + 1]
+    #     sameFileContents = searchFileContents(newDir, content)
+    #     for path in sameFileContents:
+    #         print(path)
+    # if "--size" in sys.argv:
+    #     size = sys.argv[sys.argv.index("--size") + 1]
+    #     sameFileSize = searchBySize(newDir, size)
+    #     for path in sameFileSize:
+    #         print(path)
+
+    """Above code can be simplified to"""
+    for key, value in commands.items():
+        if key in sys.argv:
+            index = sys.argv.index(key)
+            if index + 1 > len(sys.argv):
+                print(f"Error: {key} requires an argument.")  
+            argument = sys.argv[index+1]
+            result = value(newDir, argument)
+            for path in result:
+                print(path)
+
 
 if __name__ == "__main__": 
     execute()
