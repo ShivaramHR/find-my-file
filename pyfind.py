@@ -33,14 +33,19 @@ def execute():
         fileName = sys.argv[1]
         newDir = os.path.join(currDir, fileName)
         getFilePath(newDir)
+
+    fileName = sys.argv[sys.argv.index('.')-1]
+    newDir = os.path.join(currDir, fileName)
+
+
     if "--name" in sys.argv:
         pattern = sys.argv[sys.argv.index("--name") + 1]
-        sameFileTypes = searchFilePattern(currDir, pattern)
+        sameFileTypes = searchFilePattern(newDir, pattern)
         for ele in sameFileTypes:
             print(ele)
     if "--ext" in sys.argv:
         extension = sys.argv[sys.argv.index('--ext') +1]
-        sameFileExt = searchFileExtension(currDir, extension)
+        sameFileExt = searchFileExtension(newDir, extension)
         for ele in sameFileExt:
             print(ele)
 
